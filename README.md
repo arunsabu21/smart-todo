@@ -2,21 +2,21 @@
 
 A minimal and intelligent ToDo app built with **Flask + SQLite**, featuring a stylish UI and smart task management.
 
-## 🚀 Features
+## Features
 
-- ✅ Add, complete, and delete tasks
-- 📱 Mobile-first responsive design (Assistant font)
-- 💬 Flash messages with smooth fade effects
-- 🗃️ Auto-saves all tasks using SQLite
+- Add, complete, and delete tasks
+-  Mobile-first responsive design (Assistant font)
+-  Flash messages with smooth fade effects
+-  Auto-saves all tasks using SQLite
 
-## 🖥️ Tech Stack
+##  Tech Stack
 
 - Python (Flask)
 - SQLite
 - HTML, CSS, JavaScript
 - Bootstrap 5
 
-## 🛠️ How to Run
+##  How to Run
 
 ```bash
 # Clone the repo
