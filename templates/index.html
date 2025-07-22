@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart ToDo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<header>
+  <span>Smart ToDo</span>
+  <button id="themeToggle" class="toggle-btn">
+  <i id="themeIcon" class="fas fa-moon"></i>
+</button>
+</header>
+
+
+<div class="flash-container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+<div class="filter-tabs">
+    <a href="/" class="{{ 'active' if filter_type == 'all' else '' }}">All</a>
+    <a href="/?filter=pending" class="{{ 'active' if filter_type == 'pending' else '' }}">Pending</a>
+    <a href="/?filter=completed" class="{{ 'active' if filter_type == 'completed' else '' }}">Completed</a>
+</div>
+
+{% if tasks|length > 0 and filter_type != 'completed' %}
+<form method="POST" action="/complete_all" class="complete-all-form">
+    <button type="submit" class="mark-all-btn">✅ Mark All as Complete</button>
+</form>
+{% endif %}
+
+
+<main>
+    <form method="POST" action="/add" class="add-form">
+        <input type="text" name="task" placeholder="Enter your task" required>
+        <button type="submit">Add</button>
+    </form>
+
+    {% if suggestion %}
+    <div class="task-suggestion">
+        <span class="bulb">💡</span>
+        <span class="suggest-text" onclick="document.querySelector('input[name=task]').value='{{ suggestion }}'">
+    Try this: <em>{{ suggestion }}</em>
+</span>
+
+    </div>
+    {% endif %}
+
+    {% if tasks|length == 0 %}
+    <div class="no-task-box">
+        <img src="{{ url_for('static', filename='images/undraw_to-do_06xe.png') }}" alt="No Tasks" class="no-task-img">
+        <p class="no-task-text">No tasks added.<br><span class="add-text">Add a task to get started ✍️</span></p>
+    </div>
+    {% else %}
+    <ul class="task-list">
+        {% for task in tasks %}
+        <li class="{% if task.completed %}completed{% endif %}">
+            <span>{{ task.content }}</span>
+            <div class="actions">
+                {% if not task.completed %}
+                <a href="/complete/{{ task.id }}">Mark Complete</a>
+                <a href="#" onclick="editTask({{ task.id }}, '{{ task.content|escape }}')">Edit</a>
+                {% else %}
+                <a href="/delete/{{ task.id }}">Delete</a>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</main>
+<script>
+  const toggleBtn = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const body = document.body;
+
+function updateIcon() {
+  if (body.classList.contains('dark')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+  }
+}
+
+// Set theme on load
+if (localStorage.getItem('theme') === 'dark') {
+  body.classList.add('dark');
+}
+updateIcon();
+
+toggleBtn.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+  updateIcon();
+});
+
+</script>
+
+<script>
+function editTask(id, content) {
+    const newContent = prompt("Update your task:", content);
+    if (newContent && newContent.trim() !== "") {
+        window.location.href = `/edit/${id}?content=${encodeURIComponent(newContent.trim())}`;
+    }
+}
+</script>
+
+</body>
+</html>
