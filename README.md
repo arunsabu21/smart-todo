@@ -50,6 +50,6 @@ smart-todo/
 
 ---
 
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/github/license/arunsabu21/yourrepo)
+
+Made with ❤️ by [Arun Sabu](https://github.com/arunsabu21)
 
